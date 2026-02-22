@@ -1,0 +1,7 @@
+{
+  "name": "ClassHub: The Anti-Chaos Academic Dashboard",
+  "description": "A centralized platform for college students to track assignments, notes, and updates, solving the mess of fragmented WhatsApp groups.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
