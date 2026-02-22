@@ -61,6 +61,22 @@ export default function App() {
     if (upData.data) setUpdates(upData.data);
   };
 
+  // NEW: Realtime Listener for instant data updates
+  useEffect(() => {
+    if (!classCode) return;
+
+    const channel = supabase
+      .channel('classhub-global-changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'updates' }, () => fetchClassData(classCode))
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'assignments' }, () => fetchClassData(classCode))
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'notes' }, () => fetchClassData(classCode))
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [classCode]);
+
   if (loading) {
     return (
       <div className="h-screen w-screen flex items-center justify-center bg-gray-50">
