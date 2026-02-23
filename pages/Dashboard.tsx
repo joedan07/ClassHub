@@ -39,13 +39,16 @@ const Dashboard: React.FC = () => {
         }
       }
 
-      const { data: usage, error: usageError } = await supabase.rpc('get_storage_usage', { 
-        bucket_name_input: 'submissions' 
-      });
-      if (!usageError) setStorageUsage(usage);
+      // Only fetch storage stats if they aren't a student to save database reads
+      if (userRole !== 'STUDENT') {
+        const { data: usage, error: usageError } = await supabase.rpc('get_storage_usage', { 
+          bucket_name_input: 'submissions' 
+        });
+        if (!usageError) setStorageUsage(usage);
+      }
     };
     fetchData();
-  }, [classCode]);
+  }, [classCode, userRole]);
 
   const pendingAssignments = assignments.filter((a: any) => 
     !submittedIds.includes(a.id) && new Date(a.deadline_date) >= new Date()
@@ -53,7 +56,6 @@ const Dashboard: React.FC = () => {
 
   const usagePercent = Math.min((storageUsage / 1024) * 100, 100);
 
-  // (ii) FIXED: Change time from 24-hour to 12-hour format
   const formatTime = (timeStr: string) => {
     if (!timeStr) return '';
     try {
@@ -78,7 +80,8 @@ const Dashboard: React.FC = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {/* DYNAMIC GRID: 4 columns for admins/faculty, 3 columns for students */}
+      <div className={`grid grid-cols-1 md:grid-cols-2 ${userRole !== 'STUDENT' ? 'lg:grid-cols-4' : 'lg:grid-cols-3'} gap-6`}>
         <div className="bg-indigo-600 rounded-3xl p-6 text-white shadow-xl relative overflow-hidden group">
           <div className="relative z-10">
             <div className="flex justify-between items-start mb-4">
@@ -103,31 +106,33 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm">
-          <div className="flex justify-between items-start mb-4">
-             <div className="p-3 bg-indigo-50 rounded-2xl text-indigo-600">
-               <Database className="w-6 h-6" />
-             </div>
-             <span className="text-[9px] font-black uppercase text-indigo-600 bg-indigo-50 px-2 py-1 rounded">1GB Limit</span>
+        {/* CONDITIONALLY RENDERED: Storage Tracker Card */}
+        {userRole !== 'STUDENT' && (
+          <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm">
+            <div className="flex justify-between items-start mb-4">
+               <div className="p-3 bg-indigo-50 rounded-2xl text-indigo-600">
+                 <Database className="w-6 h-6" />
+               </div>
+               <span className="text-[9px] font-black uppercase text-indigo-600 bg-indigo-50 px-2 py-1 rounded">1GB Limit</span>
+            </div>
+            <div className="flex justify-between items-end mb-2">
+              <span className="text-xl font-black text-gray-900">{storageUsage.toFixed(1)} <span className="text-xs">MB</span></span>
+              <span className="text-[10px] font-bold text-gray-400">Used</span>
+            </div>
+            <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+              <div 
+                className={`h-full transition-all duration-1000 ${usagePercent > 80 ? 'bg-red-500' : 'bg-indigo-500'}`} 
+                style={{ width: `${usagePercent}%` }}
+              ></div>
+            </div>
           </div>
-          <div className="flex justify-between items-end mb-2">
-            <span className="text-xl font-black text-gray-900">{storageUsage.toFixed(1)} <span className="text-xs">MB</span></span>
-            <span className="text-[10px] font-bold text-gray-400">Used</span>
-          </div>
-          <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
-            <div 
-              className={`h-full transition-all duration-1000 ${usagePercent > 80 ? 'bg-red-500' : 'bg-indigo-500'}`} 
-              style={{ width: `${usagePercent}%` }}
-            ></div>
-          </div>
-        </div>
+        )}
 
         <div onClick={() => setShowFullTimetable(true)} className="bg-gray-900 rounded-3xl p-6 text-white shadow-xl border border-gray-800 cursor-pointer hover:border-indigo-500 transition-colors group">
           <div className="flex justify-between items-start mb-2">
             <Calendar className="w-6 h-6 text-indigo-400 group-hover:scale-110 transition-transform" />
             <span className="text-[10px] uppercase tracking-widest bg-gray-800 px-2 py-1 rounded-md font-bold text-gray-300 tracking-wider">Schedule ↗</span>
           </div>
-          {/* (i) FIXED: Next class card now shows all info properly */}
           {nextClass ? (
             <div className="animate-in fade-in slide-in-from-bottom-2">
               <div className="text-[10px] font-black text-indigo-400 uppercase tracking-widest mb-1">Next Class</div>
@@ -189,7 +194,6 @@ const Dashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* (iii) FIXED: Full-screen tint using fixed inset-0 and high z-index */}
       {showFullTimetable && (
         <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
           <div className="bg-white rounded-[2.5rem] w-full max-w-5xl max-h-[85vh] flex flex-col shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300">
