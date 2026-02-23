@@ -85,7 +85,7 @@ export const CreateModal: React.FC<CreateModalProps> = ({ onClose, type, initial
   const context = useContext(AppContext);
   const [loading, setLoading] = useState(false);
   const [facultyList, setFacultyList] = useState<any[]>([]);
-  const [file, setFile] = useState<File | null>(null); // For Notes Upload
+  const [file, setFile] = useState<File | null>(null);
   
   // Form State
   const [title, setTitle] = useState('');
@@ -93,11 +93,10 @@ export const CreateModal: React.FC<CreateModalProps> = ({ onClose, type, initial
   const [deadline, setDeadline] = useState('');
   const [description, setDescription] = useState('');
   const [submissionLink, setSubmissionLink] = useState('');
-  const [facultyId, setFacultyId] = useState('CR'); // Default to CR
+  const [facultyId, setFacultyId] = useState('CR');
   const [tags, setTags] = useState('');
 
   useEffect(() => {
-    // Fetch all Professors in THIS class code for the dropdown
     const fetchFaculty = async () => {
       if (!context?.classCode) return;
       const { data } = await supabase
@@ -128,13 +127,18 @@ export const CreateModal: React.FC<CreateModalProps> = ({ onClose, type, initial
     try {
       let finalUrl = initialData?.file_url || null;
 
-      // Logic: Handle File Upload specifically for Notes
-      if (type === 'NOTE' && file) {
+      // HOTFIX: Handle File Upload for BOTH Notes and Assignments
+      if ((type === 'NOTE' || type === 'ASSIGNMENT') && file) {
         const fileExt = file.name.split('.').pop();
-        const filePath = `${context.classCode}/notes/${Math.random()}.${fileExt}`;
-        const { error: uploadErr } = await supabase.storage.from('notes').upload(filePath, file);
+        // Route notes to 'notes' bucket, assignment materials to 'assignments' bucket
+        const bucketName = type === 'NOTE' ? 'notes' : 'assignments';
+        const folder = type === 'NOTE' ? 'notes' : 'materials';
+        const filePath = `${context.classCode}/${folder}/${Math.random()}.${fileExt}`;
+        
+        const { error: uploadErr } = await supabase.storage.from(bucketName).upload(filePath, file);
         if (uploadErr) throw uploadErr;
-        const { data: { publicUrl } } = supabase.storage.from('notes').getPublicUrl(filePath);
+        
+        const { data: { publicUrl } } = supabase.storage.from(bucketName).getPublicUrl(filePath);
         finalUrl = publicUrl;
       }
 
@@ -146,6 +150,9 @@ export const CreateModal: React.FC<CreateModalProps> = ({ onClose, type, initial
         description,
         tags: tagArray,
       };
+      
+      // Attach the file URL to the payload if it exists
+      if (finalUrl) payload.file_url = finalUrl;
 
       if (type === 'ASSIGNMENT') {
         payload.deadline_date = deadline;
@@ -157,7 +164,6 @@ export const CreateModal: React.FC<CreateModalProps> = ({ onClose, type, initial
         else await supabase.from('assignments').insert([payload]);
       } 
       else if (type === 'NOTE') {
-        payload.file_url = finalUrl; // Attach the uploaded file URL
         if (initialData) await supabase.from('notes').update(payload).eq('id', initialData.id);
         else await supabase.from('notes').insert([payload]);
       }
@@ -199,7 +205,6 @@ export const CreateModal: React.FC<CreateModalProps> = ({ onClose, type, initial
               <input required className="w-full p-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-indigo-500 outline-none font-bold" value={title} onChange={(e) => setTitle(e.target.value)} />
             </div>
 
-            {/* RESTORED: Original Assignment Grid (Subject & Due Date) */}
             {type === 'ASSIGNMENT' && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -213,7 +218,6 @@ export const CreateModal: React.FC<CreateModalProps> = ({ onClose, type, initial
               </div>
             )}
 
-            {/* RESTORED: Original Assigned By & Submission Link fields */}
             {type === 'ASSIGNMENT' && (
               <div className="space-y-4">
                 <div>
@@ -238,12 +242,13 @@ export const CreateModal: React.FC<CreateModalProps> = ({ onClose, type, initial
               </div>
             )}
 
-            {/* NEW: Notes File Upload Box (Only shows for Notes) */}
-            {type === 'NOTE' && (
+            {/* HOTFIX: This box now shows for BOTH Notes and Assignments */}
+            {(type === 'NOTE' || type === 'ASSIGNMENT') && (
                <div className="border-2 border-dashed border-indigo-100 rounded-2xl p-6 text-center hover:bg-indigo-50/30 transition-all relative mt-2">
                  <input type="file" onChange={(e) => setFile(e.target.files?.[0] || null)} className="absolute inset-0 opacity-0 cursor-pointer" />
                  <UploadCloud className="w-8 h-8 text-indigo-300 mx-auto mb-2" />
-                 <p className="text-sm font-bold text-gray-600">{file ? file.name : "Attach Material (PDF/DOC)"}</p>
+                 <p className="text-sm font-bold text-gray-600">{file ? file.name : "Attach Reference Material (PDF/DOC)"}</p>
+                 <p className="text-xs text-gray-400 mt-1">Optional</p>
                </div>
             )}
 
