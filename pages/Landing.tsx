@@ -1,191 +1,188 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
-  Zap, CircleCheck, ArrowRight, Github, 
-  Shield, Brain, Database, Calendar, Clock, Users, Linkedin 
+  Zap, ArrowRight, Github, 
+  Shield, Brain, Database, Calendar, Clock, Users, Linkedin, CircleCheck, Moon, Sun
 } from 'lucide-react';
 
 const Landing: React.FC = () => {
   const navigate = useNavigate();
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  // Smooth scroll function for navbar links
+  const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+    e.preventDefault();
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-white font-sans selection:bg-indigo-100 selection:text-indigo-900">
+    <div className={`min-h-screen font-sans transition-colors duration-500 ${isDarkMode ? 'bg-gray-950 text-gray-100' : 'bg-white text-gray-900'} selection:bg-indigo-500/30 selection:text-indigo-400`}>
+      
       {/* NAVBAR */}
-      <nav className="fixed top-0 w-full z-50 backdrop-blur-md bg-white/80 border-b border-gray-200/50">
+      <nav className={`fixed top-0 w-full z-50 backdrop-blur-md border-b transition-colors duration-500 ${isDarkMode ? 'bg-gray-950/80 border-gray-800' : 'bg-white/80 border-gray-200/50'}`}>
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="text-2xl font-black text-gray-900 tracking-tight flex items-center gap-2">
-             <Zap className="w-6 h-6 text-indigo-600 fill-indigo-600" /> ClassHub
+          <div className={`text-2xl font-black tracking-tight flex items-center gap-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+             <Zap className="w-6 h-6 text-indigo-500 fill-indigo-500" /> ClassHub
           </div>
+          
           <div className="hidden md:flex items-center gap-8">
-            <a href="#features" className="text-sm font-bold text-gray-600 hover:text-indigo-600 transition-colors uppercase tracking-widest">Features</a>
-            <a href="#tech" className="text-sm font-bold text-gray-600 hover:text-indigo-600 transition-colors uppercase tracking-widest">Tech Stack</a>
-            <a href="#developer" className="text-sm font-bold text-gray-600 hover:text-indigo-600 transition-colors uppercase tracking-widest">Developer</a>
+            <a href="#features" onClick={(e) => scrollToSection(e, 'features')} className={`text-sm font-bold hover:text-indigo-500 transition-colors uppercase tracking-widest ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Features</a>
+            <a href="#tech" onClick={(e) => scrollToSection(e, 'tech')} className={`text-sm font-bold hover:text-indigo-500 transition-colors uppercase tracking-widest ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Tech Stack</a>
+            <a href="#developer" onClick={(e) => scrollToSection(e, 'developer')} className={`text-sm font-bold hover:text-indigo-500 transition-colors uppercase tracking-widest ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Developer</a>
           </div>
-          <button 
-            onClick={() => navigate('/auth')} 
-            className="bg-indigo-600 hover:bg-indigo-500 text-white rounded-full px-8 py-3 font-bold shadow-lg shadow-indigo-600/30 transition-all hover:shadow-xl hover:-translate-y-0.5"
-          >
-            Enter Dashboard
-          </button>
+
+          <div className="flex items-center gap-4">
+            <button 
+              onClick={() => setIsDarkMode(!isDarkMode)} 
+              className={`p-2 rounded-full transition-colors ${isDarkMode ? 'bg-gray-800 hover:bg-gray-700 text-yellow-400' : 'bg-gray-100 hover:bg-gray-200 text-indigo-600'}`}
+            >
+              {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+            </button>
+            <button 
+              onClick={() => navigate('/auth')} 
+              className="bg-indigo-600 hover:bg-indigo-500 text-white rounded-full px-6 py-2.5 font-bold shadow-lg shadow-indigo-500/25 transition-all hover:shadow-xl hover:-translate-y-0.5"
+            >
+              Enter Dashboard
+            </button>
+          </div>
         </div>
       </nav>
 
       {/* HERO SECTION */}
-      <section className="relative min-h-[95vh] flex items-center justify-center overflow-hidden pt-20">
+      <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden pt-20">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-20 left-10 w-96 h-96 bg-indigo-400/20 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-20 right-10 w-96 h-96 bg-emerald-400/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+          <div className="absolute top-20 left-10 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-20 right-10 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
         </div>
         
-        <div className="relative max-w-7xl mx-auto px-6 py-20 text-center">
+        <div className="relative max-w-7xl mx-auto px-6 py-20 text-center mt-10">
           <div className="mb-8 animate-in slide-in-from-bottom-8 duration-1000">
-            <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-indigo-50 border border-indigo-100 mb-8 shadow-sm">
-              <Zap className="w-5 h-5 text-indigo-600" />
-              <span className="text-indigo-600 font-black text-sm tracking-widest uppercase">Built for Modern Universities</span>
+            <div className={`inline-flex items-center gap-2 px-6 py-3 rounded-full border mb-8 shadow-sm ${isDarkMode ? 'bg-indigo-500/10 border-indigo-500/20' : 'bg-indigo-50 border-indigo-100'}`}>
+              <Zap className="w-5 h-5 text-indigo-500" />
+              <span className="text-indigo-500 font-black text-sm tracking-widest uppercase">Built for Modern Universities</span>
             </div>
-            <h1 className="text-6xl md:text-8xl font-black text-gray-900 tracking-tighter leading-[1.1] mb-6">
-              Your entire degree,<br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-indigo-400">synchronized.</span>
+            
+            <h1 className={`text-6xl md:text-8xl font-black tracking-tighter leading-[1.1] mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              Smarter scheduling.<br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-indigo-400">Zero missed deadlines.</span>
             </h1>
           </div>
           
-          <p className="text-xl text-gray-500 font-medium max-w-3xl mx-auto mb-12 leading-relaxed animate-in slide-in-from-bottom-10 duration-1000 delay-150">
+          <p className={`text-xl font-medium max-w-3xl mx-auto mb-12 leading-relaxed animate-in slide-in-from-bottom-10 duration-1000 delay-150 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
             Stop losing PDFs in crowded WhatsApp groups. ClassHub is the ultimate command center for tracking assignments, downloading study materials, and managing your syllabus.
           </p>
           
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20 animate-in slide-in-from-bottom-12 duration-1000 delay-300">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-in slide-in-from-bottom-12 duration-1000 delay-300">
             <button 
               onClick={() => navigate('/auth')}
-              className="group bg-gray-900 hover:bg-gray-800 text-white text-lg px-8 py-5 rounded-full font-bold shadow-2xl shadow-gray-900/30 transition-all hover:scale-105 flex items-center gap-3 w-full sm:w-auto justify-center"
+              className={`group text-white text-lg px-8 py-5 rounded-full font-bold shadow-2xl transition-all hover:scale-105 flex items-center gap-3 w-full sm:w-auto justify-center ${isDarkMode ? 'bg-indigo-600 hover:bg-indigo-500 shadow-indigo-900/50' : 'bg-gray-900 hover:bg-gray-800 shadow-gray-900/30'}`}
             >
               Launch Workspace <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </button>
             <a href="https://github.com/joedan07" target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
-              <button className="bg-white hover:bg-gray-50 text-gray-900 text-lg px-8 py-5 rounded-full font-bold border-2 border-gray-200 hover:border-gray-900 transition-all hover:scale-105 flex items-center gap-3 w-full justify-center">
+              <button className={`text-lg px-8 py-5 rounded-full font-bold border-2 transition-all hover:scale-105 flex items-center gap-3 w-full justify-center ${isDarkMode ? 'bg-transparent hover:bg-gray-800 text-white border-gray-700 hover:border-gray-500' : 'bg-white hover:bg-gray-50 text-gray-900 border-gray-200 hover:border-gray-900'}`}>
                 <Github className="w-5 h-5" /> View GitHub Repo
               </button>
             </a>
-          </div>
-
-          {/* FLOATING GLASS CARD */}
-          <div className="relative mx-auto max-w-md animate-bounce hover:animate-none">
-            <div className="p-8 rounded-[2rem] backdrop-blur-xl bg-white/60 border border-white shadow-2xl hover:shadow-3xl transition-all hover:scale-105">
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-4">
-                  <div className="p-4 rounded-2xl bg-emerald-50 text-emerald-600">
-                    <CircleCheck className="w-8 h-8" />
-                  </div>
-                  <div className="text-left">
-                    <p className="text-sm font-bold text-gray-400 uppercase tracking-widest">Status</p>
-                    <p className="text-2xl font-black text-gray-900">All Clear!</p>
-                  </div>
-                </div>
-              </div>
-              <div className="flex items-center justify-between pt-6 border-t border-gray-100">
-                <div className="text-left">
-                  <p className="text-4xl font-black text-emerald-600 mb-1">0</p>
-                  <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Pending</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-4xl font-black text-indigo-600 mb-1">12</p>
-                  <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Completed</p>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </section>
 
       {/* FEATURES BENTO BOX */}
-      <section id="features" className="py-32 bg-gray-50">
+      <section id="features" className={`py-32 transition-colors duration-500 ${isDarkMode ? 'bg-gray-900/50' : 'bg-gray-50'}`}>
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-20">
-            <h2 className="text-5xl md:text-6xl font-black text-gray-900 tracking-tighter mb-4">Built Different</h2>
-            <p className="text-xl font-medium text-gray-500">Enterprise-grade architecture without the enterprise headache.</p>
+            <h2 className={`text-5xl md:text-6xl font-black tracking-tighter mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Built Different</h2>
+            <p className={`text-xl font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Enterprise-grade architecture without the enterprise headache.</p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2 p-10 rounded-[2.5rem] border border-gray-200 hover:border-indigo-500 bg-white transition-all duration-300 hover:shadow-2xl group cursor-default">
+            
+            <div className={`lg:col-span-2 p-10 rounded-[2.5rem] border transition-all duration-300 hover:shadow-2xl group cursor-default ${isDarkMode ? 'bg-gray-900 border-gray-800 hover:border-indigo-500/50' : 'bg-white border-gray-200 hover:border-indigo-500'}`}>
               <div className="flex flex-col md:flex-row items-start gap-8">
-                <div className="p-5 rounded-3xl bg-indigo-50 group-hover:bg-indigo-600 transition-colors duration-300 shrink-0">
-                  <Zap className="w-8 h-8 text-indigo-600 group-hover:text-white" />
+                <div className={`p-5 rounded-3xl transition-colors duration-300 shrink-0 ${isDarkMode ? 'bg-indigo-500/10 group-hover:bg-indigo-500' : 'bg-indigo-50 group-hover:bg-indigo-600'}`}>
+                  <Zap className="w-8 h-8 text-indigo-500 group-hover:text-white" />
                 </div>
                 <div>
-                  <h3 className="text-3xl font-black text-gray-900 mb-4 tracking-tight">Real-Time WebSockets</h3>
-                  <p className="text-lg text-gray-500 font-medium leading-relaxed mb-6">No more refreshing. Get class updates and deadline alerts instantly. Built on a strict WebSocket architecture for live, bidirectional data flow.</p>
+                  <h3 className={`text-3xl font-black mb-4 tracking-tight ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Real-Time WebSockets</h3>
+                  <p className={`text-lg font-medium leading-relaxed mb-6 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>No more refreshing. Get class updates and deadline alerts instantly. Built on a strict WebSocket architecture for live, bidirectional data flow.</p>
                   <div className="flex items-center gap-3">
                     <div className="h-3 w-3 rounded-full bg-emerald-500 animate-pulse"></div>
-                    <span className="text-sm font-black text-emerald-600 uppercase tracking-widest">Live Connection Active</span>
+                    <span className="text-sm font-black text-emerald-500 uppercase tracking-widest">Live Connection Active</span>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="p-10 rounded-[2.5rem] border border-gray-200 hover:border-emerald-500 bg-white transition-all duration-300 hover:shadow-2xl group cursor-default">
-              <div className="p-5 rounded-3xl bg-emerald-50 group-hover:bg-emerald-500 transition-colors duration-300 inline-block mb-8">
-                <Shield className="w-8 h-8 text-emerald-600 group-hover:text-white" />
+            <div className={`p-10 rounded-[2.5rem] border transition-all duration-300 hover:shadow-2xl group cursor-default ${isDarkMode ? 'bg-gray-900 border-gray-800 hover:border-emerald-500/50' : 'bg-white border-gray-200 hover:border-emerald-500'}`}>
+              <div className={`p-5 rounded-3xl transition-colors duration-300 inline-block mb-8 ${isDarkMode ? 'bg-emerald-500/10 group-hover:bg-emerald-500' : 'bg-emerald-50 group-hover:bg-emerald-500'}`}>
+                <Shield className="w-8 h-8 text-emerald-500 group-hover:text-white" />
               </div>
-              <h3 className="text-3xl font-black text-gray-900 mb-4 tracking-tight">RBAC Security</h3>
-              <p className="text-lg text-gray-500 font-medium leading-relaxed">Strict separation between Faculty, CRs, and Students via PostgreSQL Row Level Security (RLS).</p>
+              <h3 className={`text-3xl font-black mb-4 tracking-tight ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>RBAC Security</h3>
+              <p className={`text-lg font-medium leading-relaxed ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Strict separation between Faculty, CRs, and Students via PostgreSQL Row Level Security (RLS).</p>
             </div>
 
-            <div className="p-10 rounded-[2.5rem] border border-gray-200 hover:border-purple-500 bg-white transition-all duration-300 hover:shadow-2xl group cursor-default">
-              <div className="p-5 rounded-3xl bg-purple-50 group-hover:bg-purple-500 transition-colors duration-300 inline-block mb-8">
-                <Brain className="w-8 h-8 text-purple-600 group-hover:text-white" />
+            <div className={`p-10 rounded-[2.5rem] border transition-all duration-300 hover:shadow-2xl group cursor-default ${isDarkMode ? 'bg-gray-900 border-gray-800 hover:border-purple-500/50' : 'bg-white border-gray-200 hover:border-purple-500'}`}>
+              <div className={`p-5 rounded-3xl transition-colors duration-300 inline-block mb-8 ${isDarkMode ? 'bg-purple-500/10 group-hover:bg-purple-500' : 'bg-purple-50 group-hover:bg-purple-500'}`}>
+                <Brain className="w-8 h-8 text-purple-500 group-hover:text-white" />
               </div>
-              <h3 className="text-3xl font-black text-gray-900 mb-4 tracking-tight">AI Timetable Parsing</h3>
-              <p className="text-lg text-gray-500 font-medium leading-relaxed">Powered by Google Gemini Pro to turn raw images into structured relational database entries instantly.</p>
+              <h3 className={`text-3xl font-black mb-4 tracking-tight ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>AI Timetable Parsing</h3>
+              <p className={`text-lg font-medium leading-relaxed ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Powered by Google Gemini Pro to turn raw images into structured relational database entries instantly.</p>
             </div>
 
-            <div className="lg:col-span-2 p-10 rounded-[2.5rem] border border-gray-200 hover:border-amber-500 bg-white transition-all duration-300 hover:shadow-2xl group cursor-default">
+            <div className={`lg:col-span-2 p-10 rounded-[2.5rem] border transition-all duration-300 hover:shadow-2xl group cursor-default ${isDarkMode ? 'bg-gray-900 border-gray-800 hover:border-amber-500/50' : 'bg-white border-gray-200 hover:border-amber-500'}`}>
               <div className="flex flex-col md:flex-row items-start gap-8">
-                <div className="p-5 rounded-3xl bg-amber-50 group-hover:bg-amber-500 transition-colors duration-300 shrink-0">
-                  <Database className="w-8 h-8 text-amber-600 group-hover:text-white" />
+                <div className={`p-5 rounded-3xl transition-colors duration-300 shrink-0 ${isDarkMode ? 'bg-amber-500/10 group-hover:bg-amber-500' : 'bg-amber-50 group-hover:bg-amber-500'}`}>
+                  <Database className="w-8 h-8 text-amber-500 group-hover:text-white" />
                 </div>
                 <div className="w-full">
-                  <h3 className="text-3xl font-black text-gray-900 mb-4 tracking-tight">Smart Cloud Storage</h3>
-                  <p className="text-lg text-gray-500 font-medium leading-relaxed mb-8">Live cloud tracking to ensure infrastructure limits are respected. Integrated directly with Supabase storage buckets.</p>
+                  <h3 className={`text-3xl font-black mb-4 tracking-tight ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Smart Cloud Storage</h3>
+                  <p className={`text-lg font-medium leading-relaxed mb-8 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Live cloud tracking to ensure infrastructure limits are respected. Integrated directly with Supabase storage buckets.</p>
                   <div className="flex items-center gap-4 w-full">
-                    <div className="flex-1 h-3 bg-gray-100 rounded-full overflow-hidden">
+                    <div className={`flex-1 h-3 rounded-full overflow-hidden ${isDarkMode ? 'bg-gray-800' : 'bg-gray-100'}`}>
                       <div className="h-full bg-amber-500 rounded-full w-[34%] transition-all duration-1000"></div>
                     </div>
-                    <span className="text-sm font-black text-gray-900 tracking-widest">34% USED</span>
+                    <span className={`text-sm font-black tracking-widest ${isDarkMode ? 'text-gray-300' : 'text-gray-900'}`}>34% USED</span>
                   </div>
                 </div>
               </div>
             </div>
+
           </div>
         </div>
       </section>
 
       {/* ADAPTIVE INTERFACES */}
-      <section id="tech" className="py-32 bg-white">
+      <section id="tech" className="py-32">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-20">
-            <h2 className="text-5xl md:text-6xl font-black text-gray-900 tracking-tighter mb-4">Adaptive UI</h2>
-            <p className="text-xl font-medium text-gray-500">The entire interface shifts dynamically based on your role.</p>
+            <h2 className={`text-5xl md:text-6xl font-black tracking-tighter mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Adaptive UI</h2>
+            <p className={`text-xl font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>The entire interface shifts dynamically based on your role.</p>
           </div>
           
           <div className="grid md:grid-cols-2 gap-8">
-            <div className="p-12 rounded-[3rem] bg-indigo-50/50 border-2 border-indigo-100 hover:shadow-2xl transition-all">
+            <div className={`p-12 rounded-[3rem] border-2 hover:shadow-2xl transition-all ${isDarkMode ? 'bg-indigo-950/20 border-indigo-900/50' : 'bg-indigo-50/50 border-indigo-100'}`}>
               <div className="inline-block px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-black tracking-widest uppercase mb-8">Student Mode</div>
-              <h3 className="text-4xl font-black text-gray-900 mb-6 tracking-tight">Pure Focus.</h3>
-              <p className="text-lg text-gray-600 font-medium mb-10 leading-relaxed">Students see only what matters: assignments, deadlines, and class schedules. No admin noise.</p>
+              <h3 className={`text-4xl font-black mb-6 tracking-tight ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Pure Focus.</h3>
+              <p className={`text-lg font-medium mb-10 leading-relaxed ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Students see only what matters: assignments, deadlines, and class schedules. No admin noise.</p>
               <div className="space-y-6">
-                <div className="flex items-center gap-4 text-lg font-bold text-gray-900"><Calendar className="w-6 h-6 text-indigo-500" /> Live Schedule</div>
-                <div className="flex items-center gap-4 text-lg font-bold text-gray-900"><Clock className="w-6 h-6 text-indigo-500" /> Assignment Dropboxes</div>
-                <div className="flex items-center gap-4 text-lg font-bold text-gray-900"><CircleCheck className="w-6 h-6 text-indigo-500" /> Submission Status</div>
+                <div className={`flex items-center gap-4 text-lg font-bold ${isDarkMode ? 'text-gray-300' : 'text-gray-900'}`}><Calendar className="w-6 h-6 text-indigo-500" /> Live Schedule</div>
+                <div className={`flex items-center gap-4 text-lg font-bold ${isDarkMode ? 'text-gray-300' : 'text-gray-900'}`}><Clock className="w-6 h-6 text-indigo-500" /> Assignment Dropboxes</div>
+                <div className={`flex items-center gap-4 text-lg font-bold ${isDarkMode ? 'text-gray-300' : 'text-gray-900'}`}><CircleCheck className="w-6 h-6 text-indigo-500" /> Submission Status</div>
               </div>
             </div>
 
-            <div className="p-12 rounded-[3rem] bg-emerald-50/50 border-2 border-emerald-100 hover:shadow-2xl transition-all">
+            <div className={`p-12 rounded-[3rem] border-2 hover:shadow-2xl transition-all ${isDarkMode ? 'bg-emerald-950/20 border-emerald-900/50' : 'bg-emerald-50/50 border-emerald-100'}`}>
               <div className="inline-block px-4 py-2 rounded-xl bg-emerald-600 text-white text-xs font-black tracking-widest uppercase mb-8">Admin Mode</div>
-              <h3 className="text-4xl font-black text-gray-900 mb-6 tracking-tight">Complete Control.</h3>
-              <p className="text-lg text-gray-600 font-medium mb-10 leading-relaxed">Faculty and CRs get full visibility: storage metrics, user analytics, and system-wide controls.</p>
+              <h3 className={`text-4xl font-black mb-6 tracking-tight ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Complete Control.</h3>
+              <p className={`text-lg font-medium mb-10 leading-relaxed ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Faculty and CRs get full visibility: storage metrics, user analytics, and system-wide controls.</p>
               <div className="space-y-6">
-                <div className="flex items-center gap-4 text-lg font-bold text-gray-900"><Database className="w-6 h-6 text-emerald-500" /> Storage Analytics</div>
-                <div className="flex items-center gap-4 text-lg font-bold text-gray-900"><Users className="w-6 h-6 text-emerald-500" /> Class Roster Management</div>
-                <div className="flex items-center gap-4 text-lg font-bold text-gray-900"><Shield className="w-6 h-6 text-emerald-500" /> Authoring Permissions</div>
+                <div className={`flex items-center gap-4 text-lg font-bold ${isDarkMode ? 'text-gray-300' : 'text-gray-900'}`}><Database className="w-6 h-6 text-emerald-500" /> Storage Analytics</div>
+                <div className={`flex items-center gap-4 text-lg font-bold ${isDarkMode ? 'text-gray-300' : 'text-gray-900'}`}><Users className="w-6 h-6 text-emerald-500" /> Class Roster Management</div>
+                <div className={`flex items-center gap-4 text-lg font-bold ${isDarkMode ? 'text-gray-300' : 'text-gray-900'}`}><Shield className="w-6 h-6 text-emerald-500" /> Authoring Permissions</div>
               </div>
             </div>
           </div>
@@ -193,7 +190,7 @@ const Landing: React.FC = () => {
       </section>
 
       {/* FOOTER */}
-      <footer id="developer" className="py-16 bg-gray-900 border-t border-gray-800 rounded-t-[3rem]">
+      <footer id="developer" className="py-16 bg-gray-950 border-t border-gray-900 rounded-t-[3rem]">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-8">
             <div className="text-center md:text-left">
@@ -201,10 +198,10 @@ const Landing: React.FC = () => {
               <p className="text-gray-400 font-medium tracking-wide">Next-gen LMS. Built with precision.</p>
             </div>
             <div className="flex items-center gap-4">
-              <a href="https://github.com/joedan07" target="_blank" rel="noopener noreferrer" className="p-4 rounded-full bg-gray-800 border border-gray-700 hover:bg-white hover:text-gray-900 transition-all text-white">
+              <a href="https://github.com/joedan07" target="_blank" rel="noopener noreferrer" className="p-4 rounded-full bg-gray-900 border border-gray-800 hover:bg-white hover:text-gray-900 transition-all text-white">
                 <Github className="w-6 h-6" />
               </a>
-              <a href="https://www.linkedin.com/in/joe-daniel-527b0b36a/" target="_blank" rel="noopener noreferrer" className="p-4 rounded-full bg-gray-800 border border-gray-700 hover:bg-[#0A66C2] transition-all text-white hover:border-[#0A66C2]">
+              <a href="https://www.linkedin.com/in/joe-daniel-527b0b36a/" target="_blank" rel="noopener noreferrer" className="p-4 rounded-full bg-gray-900 border border-gray-800 hover:bg-[#0A66C2] transition-all text-white hover:border-[#0A66C2]">
                 <Linkedin className="w-6 h-6" />
               </a>
             </div>
