@@ -8,6 +8,7 @@ import {
 const Landing: React.FC = () => {
   const navigate = useNavigate();
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isExiting, setIsExiting] = useState(false); // NEW: State for exit animation
 
   // PREMIUM BUTTERY SMOOTH SCROLL LOGIC
   const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
@@ -15,13 +16,12 @@ const Landing: React.FC = () => {
     const element = document.getElementById(id);
     if (!element) return;
 
-    const targetPosition = element.getBoundingClientRect().top + window.pageYOffset - 80; // -80px to account for the sticky navbar
+    const targetPosition = element.getBoundingClientRect().top + window.pageYOffset - 80; 
     const startPosition = window.pageYOffset;
     const distance = targetPosition - startPosition;
-    const duration = 1000; // 1 second duration for the glide
+    const duration = 1000; 
     let start: number | null = null;
 
-    // Cubic easing function for that "Apple" feel
     const easeInOutCubic = (t: number, b: number, c: number, d: number) => {
       t /= d / 2;
       if (t < 1) return c / 2 * t * t * t + b;
@@ -40,17 +40,27 @@ const Landing: React.FC = () => {
     requestAnimationFrame(animation);
   };
 
+  // NEW: Smooth Exit Animation Logic
+  const handleNavigate = () => {
+    setIsExiting(true);
+    setTimeout(() => {
+      navigate('/auth');
+    }, 500); // Wait 500ms for the animation to finish before routing
+  };
+
   return (
-    <div className={`min-h-screen font-sans transition-colors duration-500 ${isDarkMode ? 'bg-gray-950 text-gray-100' : 'bg-white text-gray-900'} selection:bg-indigo-500/30 selection:text-indigo-400`}>
+    <div className={`min-h-screen font-sans transition-all duration-500 ease-in-out ${isDarkMode ? 'bg-gray-950 text-gray-100' : 'bg-white text-gray-900'} selection:bg-indigo-500/30 selection:text-indigo-400 ${isExiting ? 'opacity-0 scale-[0.98]' : 'opacity-100 scale-100'}`}>
       
       {/* NAVBAR */}
       <nav className={`fixed top-0 w-full z-50 backdrop-blur-md border-b transition-colors duration-500 ${isDarkMode ? 'bg-gray-950/80 border-gray-800' : 'bg-white/80 border-gray-200/50'}`}>
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        {/* FIXED: Added 'relative' to the container for absolute centering */}
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between relative">
           <div className={`text-xl font-black tracking-tight flex items-center gap-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
              <Zap className="w-5 h-5 text-indigo-500 fill-indigo-500" /> ClassHub
           </div>
           
-          <div className="hidden md:flex items-center gap-8">
+          {/* FIXED: Absolute positioning forces perfect optical centering */}
+          <div className="hidden md:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
             <a href="#features" onClick={(e) => scrollToSection(e, 'features')} className={`text-sm font-bold hover:text-indigo-500 transition-colors uppercase tracking-widest ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Features</a>
             <a href="#tech" onClick={(e) => scrollToSection(e, 'tech')} className={`text-sm font-bold hover:text-indigo-500 transition-colors uppercase tracking-widest ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Tech Stack</a>
             <a href="#developer" onClick={(e) => scrollToSection(e, 'developer')} className={`text-sm font-bold hover:text-indigo-500 transition-colors uppercase tracking-widest ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Developer</a>
@@ -64,7 +74,7 @@ const Landing: React.FC = () => {
               {isDarkMode ? <Sun className="w-[18px] h-[18px]" /> : <Moon className="w-[18px] h-[18px]" />}
             </button>
             <button 
-              onClick={() => navigate('/auth')} 
+              onClick={handleNavigate} 
               className="bg-indigo-600 hover:bg-indigo-500 text-white rounded-full px-5 py-2 text-sm font-bold shadow-lg shadow-indigo-500/25 transition-all hover:shadow-xl hover:-translate-y-0.5"
             >
               Enter Dashboard
@@ -73,7 +83,7 @@ const Landing: React.FC = () => {
         </div>
       </nav>
 
-      {/* HERO SECTION - Scaled Down */}
+      {/* HERO SECTION */}
       <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden pt-20 pb-10">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-20 left-10 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl animate-pulse"></div>
@@ -99,7 +109,7 @@ const Landing: React.FC = () => {
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-in slide-in-from-bottom-12 duration-1000 delay-300">
             <button 
-              onClick={() => navigate('/auth')}
+              onClick={handleNavigate}
               className={`group text-white text-base px-8 py-4 rounded-full font-bold shadow-2xl transition-all hover:scale-105 flex items-center gap-3 w-full sm:w-auto justify-center ${isDarkMode ? 'bg-indigo-600 hover:bg-indigo-500 shadow-indigo-900/50' : 'bg-gray-900 hover:bg-gray-800 shadow-gray-900/30'}`}
             >
               Launch Workspace <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -113,7 +123,7 @@ const Landing: React.FC = () => {
         </div>
       </section>
 
-      {/* FEATURES BENTO BOX - Padding & Typography Scaled */}
+      {/* FEATURES BENTO BOX */}
       <section id="features" className={`py-24 transition-colors duration-500 ${isDarkMode ? 'bg-gray-900/50' : 'bg-gray-50'}`}>
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
@@ -177,7 +187,7 @@ const Landing: React.FC = () => {
         </div>
       </section>
 
-      {/* ADAPTIVE INTERFACES - Scaled Down */}
+      {/* ADAPTIVE INTERFACES */}
       <section id="tech" className="py-24">
         <div className="max-w-[85rem] mx-auto px-6">
           <div className="text-center mb-16">
