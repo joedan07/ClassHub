@@ -2,14 +2,13 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Zap, ArrowRight, Github, 
-  Shield, Brain, Database, Calendar, Clock, Users, Linkedin, CircleCheck, Moon, Sun
+  Shield, Brain, Database, Calendar, Clock, Users, Linkedin, CircleCheck, Moon, Sun, Bell, FileText
 } from 'lucide-react';
 
 const Landing: React.FC = () => {
   const navigate = useNavigate();
   const [isDarkMode, setIsDarkMode] = useState(false);
 
-  // Smooth scroll function for navbar links
   const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
     const element = document.getElementById(id);
@@ -51,16 +50,16 @@ const Landing: React.FC = () => {
         </div>
       </nav>
 
-      {/* HERO SECTION */}
-      <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden pt-20">
+      {/* HERO SECTION - Spacing Tightened for Button Visibility */}
+      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden pt-24 pb-12">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-20 left-10 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl animate-pulse"></div>
           <div className="absolute bottom-20 right-10 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
         </div>
         
-        <div className="relative max-w-7xl mx-auto px-6 py-20 text-center mt-10">
-          <div className="mb-8 animate-in slide-in-from-bottom-8 duration-1000">
-            <div className={`inline-flex items-center gap-2 px-6 py-3 rounded-full border mb-8 shadow-sm ${isDarkMode ? 'bg-indigo-500/10 border-indigo-500/20' : 'bg-indigo-50 border-indigo-100'}`}>
+        <div className="relative max-w-7xl mx-auto px-6 text-center">
+          <div className="mb-6 animate-in slide-in-from-bottom-8 duration-1000">
+            <div className={`inline-flex items-center gap-2 px-6 py-3 rounded-full border mb-6 shadow-sm ${isDarkMode ? 'bg-indigo-500/10 border-indigo-500/20' : 'bg-indigo-50 border-indigo-100'}`}>
               <Zap className="w-5 h-5 text-indigo-500" />
               <span className="text-indigo-500 font-black text-sm tracking-widest uppercase">Built for Modern Universities</span>
             </div>
@@ -71,7 +70,7 @@ const Landing: React.FC = () => {
             </h1>
           </div>
           
-          <p className={`text-xl font-medium max-w-3xl mx-auto mb-12 leading-relaxed animate-in slide-in-from-bottom-10 duration-1000 delay-150 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+          <p className={`text-xl font-medium max-w-3xl mx-auto mb-10 leading-relaxed animate-in slide-in-from-bottom-10 duration-1000 delay-150 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
             Stop losing PDFs in crowded WhatsApp groups. ClassHub is the ultimate command center for tracking assignments, downloading study materials, and managing your syllabus.
           </p>
           
@@ -155,16 +154,17 @@ const Landing: React.FC = () => {
         </div>
       </section>
 
-      {/* ADAPTIVE INTERFACES */}
+      {/* ADAPTIVE INTERFACES - Now with 3 Columns */}
       <section id="tech" className="py-32">
-        <div className="max-w-7xl mx-auto px-6">
+        <div className="max-w-[90rem] mx-auto px-6">
           <div className="text-center mb-20">
             <h2 className={`text-5xl md:text-6xl font-black tracking-tighter mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Adaptive UI</h2>
             <p className={`text-xl font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>The entire interface shifts dynamically based on your role.</p>
           </div>
           
-          <div className="grid md:grid-cols-2 gap-8">
-            <div className={`p-12 rounded-[3rem] border-2 hover:shadow-2xl transition-all ${isDarkMode ? 'bg-indigo-950/20 border-indigo-900/50' : 'bg-indigo-50/50 border-indigo-100'}`}>
+          <div className="grid lg:grid-cols-3 gap-8">
+            {/* Student Card */}
+            <div className={`p-10 lg:p-12 rounded-[3rem] border-2 hover:shadow-2xl transition-all ${isDarkMode ? 'bg-indigo-950/20 border-indigo-900/50' : 'bg-indigo-50/50 border-indigo-100'}`}>
               <div className="inline-block px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-black tracking-widest uppercase mb-8">Student Mode</div>
               <h3 className={`text-4xl font-black mb-6 tracking-tight ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Pure Focus.</h3>
               <p className={`text-lg font-medium mb-10 leading-relaxed ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Students see only what matters: assignments, deadlines, and class schedules. No admin noise.</p>
@@ -175,10 +175,23 @@ const Landing: React.FC = () => {
               </div>
             </div>
 
-            <div className={`p-12 rounded-[3rem] border-2 hover:shadow-2xl transition-all ${isDarkMode ? 'bg-emerald-950/20 border-emerald-900/50' : 'bg-emerald-50/50 border-emerald-100'}`}>
+            {/* CR Mode Card */}
+            <div className={`p-10 lg:p-12 rounded-[3rem] border-2 hover:shadow-2xl transition-all ${isDarkMode ? 'bg-purple-950/20 border-purple-900/50' : 'bg-purple-50/50 border-purple-100'}`}>
+              <div className="inline-block px-4 py-2 rounded-xl bg-purple-600 text-white text-xs font-black tracking-widest uppercase mb-8">CR Mode</div>
+              <h3 className={`text-4xl font-black mb-6 tracking-tight ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>The Bridge.</h3>
+              <p className={`text-lg font-medium mb-10 leading-relaxed ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Class Reps manage internal deadlines, broadcast urgent updates, and act as the liaison.</p>
+              <div className="space-y-6">
+                <div className={`flex items-center gap-4 text-lg font-bold ${isDarkMode ? 'text-gray-300' : 'text-gray-900'}`}><Bell className="w-6 h-6 text-purple-500" /> Class Announcements</div>
+                <div className={`flex items-center gap-4 text-lg font-bold ${isDarkMode ? 'text-gray-300' : 'text-gray-900'}`}><FileText className="w-6 h-6 text-purple-500" /> Internal Assignments</div>
+                <div className={`flex items-center gap-4 text-lg font-bold ${isDarkMode ? 'text-gray-300' : 'text-gray-900'}`}><Users className="w-6 h-6 text-purple-500" /> Peer Management</div>
+              </div>
+            </div>
+
+            {/* Admin Card */}
+            <div className={`p-10 lg:p-12 rounded-[3rem] border-2 hover:shadow-2xl transition-all ${isDarkMode ? 'bg-emerald-950/20 border-emerald-900/50' : 'bg-emerald-50/50 border-emerald-100'}`}>
               <div className="inline-block px-4 py-2 rounded-xl bg-emerald-600 text-white text-xs font-black tracking-widest uppercase mb-8">Admin Mode</div>
-              <h3 className={`text-4xl font-black mb-6 tracking-tight ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Complete Control.</h3>
-              <p className={`text-lg font-medium mb-10 leading-relaxed ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Faculty and CRs get full visibility: storage metrics, user analytics, and system-wide controls.</p>
+              <h3 className={`text-4xl font-black mb-6 tracking-tight ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Full Control.</h3>
+              <p className={`text-lg font-medium mb-10 leading-relaxed ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Faculty get full visibility: live storage metrics, user analytics, and system-wide controls.</p>
               <div className="space-y-6">
                 <div className={`flex items-center gap-4 text-lg font-bold ${isDarkMode ? 'text-gray-300' : 'text-gray-900'}`}><Database className="w-6 h-6 text-emerald-500" /> Storage Analytics</div>
                 <div className={`flex items-center gap-4 text-lg font-bold ${isDarkMode ? 'text-gray-300' : 'text-gray-900'}`}><Users className="w-6 h-6 text-emerald-500" /> Class Roster Management</div>
