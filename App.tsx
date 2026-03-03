@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AlertTriangle, Loader2 } from 'lucide-react';
 import { supabase } from './supabase';
 
-import Home from './pages/Home';
+import Home from './pages/Landing';
 import Auth from './pages/Auth';
 import Dashboard from './pages/Dashboard';
 import Assignments from './pages/Assignments';
